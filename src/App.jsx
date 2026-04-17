@@ -1,0 +1,24 @@
+import Sidebar from "./components/utilities/Sidebar"
+import Dashboard from "./components/pages/Dashboard"
+
+function App() {
+  return (
+    // Remove inset-0 from here; fixed elements don't obey parent flex limits well.
+    // We use min-h-screen to ensure the background covers the whole page.
+    <div className="min-h-screen bg-gray-50">
+      <Sidebar />
+      
+      {/* md:ml-64 (or pl-64) is the secret sauce. 
+          It pushes the Dashboard to the right so it doesn't 
+          get hidden behind the fixed sidebar.
+      */}
+      <main className="md:ml-64 p-4 transition-all duration-300">
+        <div className="max-w-7xl mx-auto">
+           <Dashboard />
+        </div>
+      </main>
+    </div>
+  )
+}
+
+export default App
