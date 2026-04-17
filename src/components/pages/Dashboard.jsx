@@ -24,7 +24,7 @@ const CategoryPieData = {
   ],
   datasets: [{
       label:'Food',
-      data: [12, 19, 3, 5, 2, 3],
+      data: [12, 19, 3, 5, 2],
       backgroundColor:[
         'rgba(255, 99, 132, 0.2)',
         'rgba(54, 162, 235, 0.2)',
@@ -52,6 +52,20 @@ const options = {
         padding: 20,         // Adds space between the labels
         font: {
           size: 12
+        }
+      }
+    },
+    tooltip: {
+      callbacks: {
+        // 'context' contains all information about the item you are hovering over
+        label: function (context) {
+          // context.label is "Income" or "Expenses"
+          // context.formattedValue is the number (e.g., "120")
+          return ` ${context.label}: ₱${context.formattedValue}`;
+        },
+        // This removes the "Profit and Loss" title from the top of the tooltip
+        title: function() {
+          return ''; 
         }
       }
     }
@@ -85,10 +99,24 @@ const AnalysisOption = {
     legend: {
       display: false,
     },
+    tooltip: {
+      callbacks: {
+        // 'context' contains all information about the item you are hovering over
+        label: function (context) {
+          // context.label is "Income" or "Expenses"
+          // context.formattedValue is the number (e.g., "120")
+          return ` ${context.label}: ₱${context.formattedValue}`;
+        },
+        // This removes the "Profit and Loss" title from the top of the tooltip
+        title: function() {
+          return ''; 
+        }
+      }
+    }
   },
   scales: {
     y: {
-      beginAtZero: true, // Recommended for bar charts so they don't look "cut off"
+      beginAtZero: true,
     },
   },
 };
