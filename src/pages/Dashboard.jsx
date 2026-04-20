@@ -123,7 +123,7 @@ const AnalysisOption = {
 
 
   return (
-    <div className="p-4 space-y-10">
+    <div className="space-y-10">
       {/* grid-cols-1: Mobile (1 card per row)
          sm:grid-cols-2: Tablets (2 cards per row)
          lg:grid-cols-4: Desktop (4 cards per row)
@@ -198,6 +198,101 @@ const AnalysisOption = {
           </div>
         </div>
       </div>
+
+       <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 bg-white rounded-xl overflow-hidden  shadow-md ">
+          <div className="max-h-[250px] overflow-y-auto scrollbar-hide">
+          <table class="table-fixed w-full text-center border-collapse ">
+            <thead className=" sticky top-0 text-center bg-gray-400 tracking-wider text-sm uppercase">
+                <tr className="text-gray-700">
+                  <th className="p-3 text-white">Date</th>
+                  <th className="p-3 text-white">Description</th>
+                  <th className="p-3 text-white">Category</th>
+                  <th className="p-3 text-white">Type</th>
+                  <th className="p-3 text-white">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {[
+                  {
+                    "Date" : "04-20-2026",
+                    "Description": "Fund Transfer",
+                    "Category": "Fund Transfer",
+                    "Type": "Transfer",
+                    "Amount": "12000"
+                  },
+                  {
+                    "Date" : "04-20-2026",
+                    "Description": "Salary",
+                    "Category": "Income",
+                    "Type": "Income",
+                    "Amount": "12000"
+                  },
+                  {
+                    "Date" : "04-20-2026",
+                    "Description": "Payment for Goods",
+                    "Category": "Food",
+                    "Type": "Expense",
+                    "Amount": "12000"
+                  },
+                  {
+                    "Date" : "04-20-2026",
+                    "Description": "Payment for Goods",
+                    "Category": "Food",
+                    "Type": "Expense",
+                    "Amount": "12000"
+                  },
+                  {
+                    "Date" : "04-20-2026",
+                    "Description": "Payment for Goods",
+                    "Category": "Food",
+                    "Type": "Expense",
+                    "Amount": "12000"
+                  },{
+                    "Date" : "04-20-2026",
+                    "Description": "Payment for Goods",
+                    "Category": "Food",
+                    "Type": "Expense",
+                    "Amount": "12000"
+                  },
+                  {
+                    "Date" : "04-20-2026",
+                    "Description": "Payment for Goods",
+                    "Category": "Food",
+                    "Type": "Expense",
+                    "Amount": "12000"
+                  },
+                  {
+                    "Date" : "04-20-2026",
+                    "Description": "Payment for Goods",
+                    "Category": "Food",
+                    "Type": "Expense",
+                    "Amount": "12000"
+                  },
+                  {
+                    "Date" : "04-20-2026",
+                    "Description": "Payment for Goods",
+                    "Category": "Food",
+                    "Type": "Expense",
+                    "Amount": "12000"
+                  }
+                ].map((data,index)=>(
+                    <tr className="p-2 hover:bg-gray-100">
+                      <td className="p-2 tracking-wider text-sm">{data.Date}</td>
+                      <td className="p-2 tracking-wider text-sm">{data.Description}</td>
+                      <td className="p-2 tracking-wider text-sm">{data.Category}</td>
+                      <td className={data.Type === "Transfer" ? "text-gray-400 tracking-wider text-sm" : 
+                        data.Type === "Income" ? "text-blue-400 tracking-wider text-sm" : "text-red-400 tracking-wider text-sm"
+                      }>{data.Type}</td>
+                      <td className={data.Type === "Transfer" ? "text-gray-400 tracking-wider text-sm" : 
+                        data.Type === "Income" ? "text-blue-400 tracking-wider text-sm" : "text-red-400 tracking-wider text-sm"
+                      }>{data.Type === "Transfer" ? 
+                      `₱${data.Amount}` : data.Type === "Income" ? `+₱${data.Amount}` : `-₱${data.Amount}`}</td>
+                    </tr>
+                ))}
+            </tbody>
+          </table>
+          </div>
+       </div>
     </div>
   );
 }

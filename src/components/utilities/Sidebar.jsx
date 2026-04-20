@@ -1,6 +1,6 @@
 import { HiHome, HiSwitchHorizontal, HiChartPie, HiChartBar, HiCurrencyDollar, HiMenu, HiOutlineX } from "react-icons/hi";
 import { useState } from "react";
-
+import { NavLink } from "react-router-dom";
 function Sidebar() {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -33,21 +33,43 @@ function Sidebar() {
         {/* Navigation - Scrollable inside if items overflow */}
         <nav className="flex-grow overflow-y-auto p-4">
           <ul className="space-y-2">
-            <li className="flex items-center gap-3 p-3 hover:bg-blue-50 hover:text-blue-600 rounded-lg cursor-pointer transition-all">
-              <HiHome className="text-xl"/> <span>Dashboard</span>
-            </li>
-            <li className="flex items-center gap-3 p-3 hover:bg-blue-50 hover:text-blue-600 rounded-lg cursor-pointer transition-all">
-              <HiSwitchHorizontal className="text-xl"/> <span>Transactions</span>
-            </li>
-            <li className="flex items-center gap-3 p-3 hover:bg-blue-50 hover:text-blue-600 rounded-lg cursor-pointer transition-all">
-              <HiChartPie className="text-xl"/> <span>Budgets</span>
-            </li>
-             <li className="flex items-center gap-3 p-3 hover:bg-blue-50 hover:text-blue-600 rounded-lg cursor-pointer transition-all">
-              <HiChartBar className="text-xl"/> <span>Reports</span>
-            </li>
-             <li className="flex items-center gap-3 p-3 hover:bg-blue-50 hover:text-blue-600 rounded-lg cursor-pointer transition-all">
-              <HiCurrencyDollar className="text-xl"/> <span>Savings Goals</span>
-            </li>
+              {[
+                {
+                  to: "/",
+                  name: "Dashboard",
+                  icon: <HiHome/>
+                },
+                {
+                  to: "/transactions",
+                  name: "Transactions",
+                  icon: <HiSwitchHorizontal/>
+                },
+                {
+                  to: "/budgets",
+                  name: "Budgets",
+                  icon: <HiChartPie/>
+                },
+                {
+                  to: "/reports",
+                  name: "Reports",
+                  icon: <HiChartBar/>
+                },
+                {
+                  to: "/savings-goals",
+                  name: "Savings Goals",
+                  icon: <HiCurrencyDollar/>
+                }
+              ].map((data,index)=>(
+                <li key={index} >
+                    <NavLink to={data.to} className={(({isActive})=>(
+                      isActive ? "flex items-center space-x-2 text-blue-400 bg-blue-100 rounded-lg p-2 font-semibold" : 
+                      "flex items-center gap-2 p-2 text-gray-400 hover:text-blue-400 hover:bg-blue-100 rounded-lg"
+                    ))}>
+                      <span>{data.icon}</span>
+                      <span>{data.name}</span>
+                    </NavLink>
+                </li>
+              ))}
           </ul>
         </nav>
       </aside>
