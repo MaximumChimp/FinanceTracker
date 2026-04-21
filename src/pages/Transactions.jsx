@@ -6,10 +6,6 @@ const DisplayMonths = ["All","January", "February", "March", "April", "May", "Ju
   "July", "August", "September", "October", "November", "December"];
 
 
-
-
-
-
 function Transactions(){
     const [isOpen, setIsOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
@@ -17,11 +13,12 @@ function Transactions(){
     const [filterCategory,setFilterCategory] = useState('All')
     const [filterMonths,setFilterMonths] = useState('All')
     const [transactionId,setTransactionId] = useState('')
-
+    const [deleteTransactionId,setDeleteTransactionId] = useState('')
     const [transactionData,setTransactionData] = useState([])
-    
+    const [openMobile, setOpenMobile] = useState(false)
 
-    const filteredData = transactionData.filter((data,_)=>{
+    const filteredData = Array.isArray(transactionData) ?
+    transactionData.filter(Boolean).filter((data,_)=>{
         const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' })
         .format(new Date(data.Date));
         const matchesType = filterType === 'All' || data.Type === filterType
@@ -29,7 +26,21 @@ function Transactions(){
         
         const matchesMonth = filterMonths.toLowerCase() === 'all' ||  monthName === filterMonths
         return matchesType && matchesCategory && matchesMonth
-    })
+    }) : []
+
+    const handleDeleteId = (id) => {
+    try {
+        const updatedData = transactionData.filter(item => item?.id !== id);
+
+        // update state
+        setTransactionData(updatedData);
+
+        // update localStorage
+        localStorage.setItem("transaction_data", JSON.stringify(updatedData));
+    } catch (error) {
+        console.log("Unable to delete transaction!", error);
+    }
+};
   
 
     useEffect(()=>{
@@ -131,7 +142,7 @@ function Transactions(){
                                 }</td>
                                 <td className="p-2 tracking-wider uppercase text-sm space-x-2">
                                     <button onClick={()=>{ setEditModalOpen(true),setTransactionId(data.id) }}><HiPencilAlt className="text-blue-500 text-lg"/></button>
-                                    <button><HiTrash className="text-red-500 text-lg"/></button>
+                                    <button onClick={()=>{handleDeleteId(data.id)}}><HiTrash className="text-red-500 text-lg"/></button>
                                 </td>
                             </tr>
                         ))
@@ -145,7 +156,7 @@ function Transactions(){
             </div>
             
             {
-                transactionData.map((data,index)=>(
+                filteredData.map((data,index)=>(
                     <div key={index} className="flex flex-col bg-white p-2 rounded-xl shadow-md space-y-4  md:hidden lg:hidden">   
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
@@ -154,8 +165,12 @@ function Transactions(){
                                     data.Type === "Income" ? "bg-blue-400 text-xs rounded-xl p-1 text-white pl-2 pr-2" : "bg-red-400 text-xs pl-2 pr-2 text-white p-1 rounded-xl"
                                 }>{data.Type}</span>
                             </div>
-                            <div>
-                                <span><HiDotsHorizontal className="text-xl rounded-xl text-gray-400"/></span>
+                            <div className="cursor-pointer ">
+                                <HiDotsHorizontal onClick={()=>setOpenMobile(true)} className="text-xl rounded-xl text-gray-400"/>
+                                <div className={`absolute  right-5 z-50 bg-white rounded-lg  shadow-lg p-2 px-20 space-y-3 flex flex-col cursor-pointer ${openMobile === true? "block" : "hidden"} `}>
+                                    <span className="hover:bg-gray-100">Edit</span>
+                                    <span className="hover:bg-gray-100">Delete</span>
+                                </div>
                             </div>
                         </div>
                         <div className="">

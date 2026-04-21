@@ -21,7 +21,15 @@ function CreateTransactionModal({isOpen,onClose}){
             Amount:Number(amount)
         }
 
-        const oldTransaction = JSON.parse(localStorage.getItem("transaction_data")) || []
+        let oldTransaction = []
+        
+        const savedData = JSON.parse(localStorage.getItem("transaction_data"))
+
+        try{
+            oldTransaction = Array.isArray(savedData) ? savedData : []
+        }catch{
+            oldTransaction = []
+        }
 
         const UpdatedDate = [newTransaction,...oldTransaction]
 
@@ -55,21 +63,21 @@ function CreateTransactionModal({isOpen,onClose}){
                         <div className="flex flex-col space-y-1 flex-1">
                             <label htmlFor="" className="text-sm">Category</label>
                             <select name="" id="" onChange={(e)=>setCategory(e.target.value)}  className="border-b-1 border-b-gray-300 outline-0 focus:border-b-blue-400 text-sm ">
-                                <option value="">Food</option>
-                                <option value="">Income</option>
-                                <option value="">Trasportation</option>
-                                <option value="">Housing</option>
-                                <option value="">Shopping</option>
-                                <option value="">Entertainment</option>
-                                <option value="">Fund Transfer</option>
+                                <option value="Food">Food</option>
+                                <option value="Income">Income</option>
+                                <option value="Transportation">Trasportation</option>
+                                <option value="Housing">Housing</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Transfer">Transfer</option>
                             </select>
                         </div>
                         <div className="flex flex-col space-y-1 flex-1">
                             <label htmlFor="" className="text-sm">Type</label>
                             <select name="" id="" onChange={(e)=>setType(e.target.value)} className="border-b-1 border-b-gray-300 focus:border-b-blue-400 outline-0 text-sm ">
-                                <option value="">Income</option>
-                                <option value="">Expense</option>
-                                <option value="">Trasfer</option>
+                                <option value="Income">Income</option>
+                                <option value="Expense">Expense</option>
+                                <option value="Transfer">Transfer</option>
                             </select>
                         </div>
                     </div>
