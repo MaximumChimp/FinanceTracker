@@ -42,12 +42,12 @@ function CreateTransactionModal({isOpen,onClose}){
    }
    return(
         <div className="fixed flex items-center justify-center z-50 bg-black/50 inset-0">
-            <div className="relative p-4 rounded-xl bg-white w-[90%] max-w-[550px] space-y-2">
+            <div className="relative p-4 bg-white w-[90%] max-w-[550px] space-y-2">
                 <h1 className="text-xl text-blue-500 font-bold pt-2">Create New Transaction</h1>
                 <div className="flex flex-col justify-center ">
                     <div className="flex flex-col-reverse items-center justify-center p-4">
                         <h1 className="text-lg font-bold p-2 text-blue-400">Amount</h1>
-                        <input type="number" onChange={(e)=>setAmount(e.target.value)} placeholder="0.00" autoFocus className="border-b-1 w-[50%] border-gray-300 outline-0 focus:border-blue-400 transition-300 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/>
+                        <input type="number" onChange={(e)=>setAmount(e.target.value)} placeholder="₱0.00" autoFocus className="border-b-1 w-[50%] border-gray-300 outline-0 focus:border-blue-400 transition-300 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/>
                     </div>
                     <div className="flex justify-around space-y-5 gap-5">
                         <div className="flex flex-col space-y-1 flex-1">
@@ -83,8 +83,8 @@ function CreateTransactionModal({isOpen,onClose}){
                     </div>
                 </div>
                 <div className="flex justify-end space-x-2 pt-3">
-                    <button onClick={onClose} className="p-2 bg-gray-400 text-white rounded-md px-10">Close</button>
-                    <button onClick={handleSave} className="p-2 bg-blue-400 text-white rounded-md px-10">Save</button>
+                    <button onClick={onClose} className="p-2 bg-gray-400 text-white px-10">Close</button>
+                    <button onClick={handleSave} className="p-2 bg-blue-400 text-white px-10">Save</button>
                 </div>
             </div>
         </div>

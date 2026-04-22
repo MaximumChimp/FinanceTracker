@@ -16,7 +16,7 @@ function Transactions(){
     const [deleteTransactionId,setDeleteTransactionId] = useState('')
     const [transactionData,setTransactionData] = useState([])
     const [openMobile, setOpenMobile] = useState(false)
-
+    const [perTransactionId,setPerTransactionId] = useState('')
     const filteredData = Array.isArray(transactionData) ?
     transactionData.filter(Boolean).filter((data,_)=>{
         const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' })
@@ -70,20 +70,32 @@ function Transactions(){
         }
     },[])
 
+    const handleToggleMobileMenu = (id) =>{
+        const savedData = localStorage.getItem("transaction_data")
+
+        if(!savedData) return null
+
+        const parsedData = JSON.parse(savedData)
+
+        const toggle = parsedData.find((item)=> item.id === id)
+
+        console.log(toggle)
+    }
+
 
     return(
         <div className="space-y-4 sm:space-y-10">
-            <div className="sticky top-0 bg-white w-full p-4 shadow-md rounded-xl">
+            <div className="sticky top-0 bg-white w-full p-4 shadow-md  z-50">
                 <div className="flex flex-col justify-between sm:items-center sm:flex-row md:flex-row space-y-5">
                 <h1 className="text-2xl font-bold text-blue-500 mt-10 sm:mt-10 md:mt-0">Transactions</h1>
-                <button onClick={()=>setIsOpen(true)} className="bg-blue-400 p-2 font-medium sm:text-sm md:text-sm lg:text-sm text-white rounded-xl tracking-wider flex items-center justify-center gap-1"><HiPlusCircle /> Create Transaction</button>
-            </div>
+                <button onClick={()=>setIsOpen(true)} className="bg-blue-400 p-2 font-medium sm:text-sm md:text-sm lg:text-sm text-white  tracking-wider flex items-center justify-center gap-1"><HiPlusCircle /> Create Transaction</button>
+                </div>
 
             <div className="flex flex-col sm:flex-row md:flex-row justify-center text-xs pt-5 pb-4 sm:justify-start md:justify-start sm:text-sm gap-4">
                 <div className="flex justify-between gap-3">
                      <div className="flex flex-col space-y-2">
                         <span className="text-xs uppercase tracking-wider">Type</span>
-                        <select name="" id="" onChange={(e)=>setFilterType(e.target.value)} className="border border-gray-200 rounded-lg p-2 tracking-wider text-sm outline-0">
+                        <select name="" id="" onChange={(e)=>setFilterType(e.target.value)} className="border border-gray-200 p-2 tracking-wider text-sm outline-0">
                             <option value="All">All</option>
                             <option value="Income">Income</option>
                             <option value="Transfer">Transfer</option>
@@ -92,7 +104,7 @@ function Transactions(){
                     </div>
                     <div className="flex flex-col flex-1 space-y-2">
                         <span className="text-xs uppercase tracking-wider">Category</span>
-                        <select name="" id="" onChange={(e)=>setFilterCategory(e.target.value)} className="border border-gray-200 rounded-lg p-2 tracking-wider text-sm outline-0">
+                        <select name="" id="" onChange={(e)=>setFilterCategory(e.target.value)} className="border border-gray-200 p-2 tracking-wider text-sm outline-0">
                             <option value="All">All Categories</option>
                             <option value="Income">Income</option>
                             <option value="Food">Food</option>
@@ -105,7 +117,7 @@ function Transactions(){
                 </div>
                 <div className="flex flex-col space-y-2">
                     <span className="text-xs uppercase tracking-wider">Month</span>
-                     <select name="" id="" onChange={(e)=>setFilterMonths(e.target.value)} className="border border-gray-200 rounded-lg p-2 tracking-wider text-sm outline-0">
+                     <select name="" id="" onChange={(e)=>setFilterMonths(e.target.value)} className="border border-gray-200 p-2 tracking-wider text-sm outline-0">
                         {DisplayMonths.map((data,index)=>(
                             <option key={index} value={data}>{data}</option>
                         ))}
@@ -114,7 +126,7 @@ function Transactions(){
             </div>
             </div>
 
-            <div className="hidden md:block bg-white rounded-xl max-h-[650px] shadow-md overflow-hidden overflow-y-auto scrollbar-hide">
+            <div className="hidden md:block bg-white  max-h-[650px] shadow-md overflow-hidden overflow-y-auto scrollbar-hide">
                 <table className="w-full table-fixed bg-white">
                     <thead className="bg-gray-400 text-white sticky top-0 ">
                         <tr className="">
@@ -141,7 +153,7 @@ function Transactions(){
                                     data.Type === "Income" ? `+₱${data.Amount}` : `-₱${data.Amount}`
                                 }</td>
                                 <td className="p-2 tracking-wider uppercase text-sm space-x-2">
-                                    <button onClick={()=>{ setEditModalOpen(true),setTransactionId(data.id) }}><HiPencilAlt className="text-blue-500 text-lg"/></button>
+                                    <button onClick={()=>{ setEditModalOpen(true),setTransactionId(data.id);handleToggleMobileMenu(data.id) }}><HiPencilAlt className="text-blue-500 text-lg"/></button>
                                     <button onClick={()=>{handleDeleteId(data.id)}}><HiTrash className="text-red-500 text-lg"/></button>
                                 </td>
                             </tr>
@@ -157,19 +169,25 @@ function Transactions(){
             
             {
                 filteredData.map((data,index)=>(
-                    <div key={index} className="flex flex-col bg-white p-2 rounded-xl shadow-md space-y-4  md:hidden lg:hidden">   
+                    <div key={index} className="flex flex-col bg-white p-2  shadow-md space-y-4  md:hidden lg:hidden">   
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
                                 <span className="text-sm text-gray-500 tracking-wider">{data.Date}</span>
-                                <span className={data.Type === "Transfer" ? "bg-gray-400 text-xs p-1 rounded-xl text-white pl-2 pr-2" : 
-                                    data.Type === "Income" ? "bg-blue-400 text-xs rounded-xl p-1 text-white pl-2 pr-2" : "bg-red-400 text-xs pl-2 pr-2 text-white p-1 rounded-xl"
+                                <span className={data.Type === "Transfer" ? "bg-gray-400 text-xs p-1  text-white pl-2 pr-2" : 
+                                    data.Type === "Income" ? "bg-blue-400 text-xs  p-1 text-white pl-2 pr-2" : "bg-red-400 text-xs pl-2 pr-2 text-white p-1 "
                                 }>{data.Type}</span>
                             </div>
-                            <div className="cursor-pointer ">
-                                <HiDotsHorizontal onClick={()=>setOpenMobile(true)} className="text-xl rounded-xl text-gray-400"/>
-                                <div className={`absolute  right-5 z-50 bg-white rounded-lg  shadow-lg p-2 px-20 space-y-3 flex flex-col cursor-pointer ${openMobile === true? "block" : "hidden"} `}>
-                                    <span className="hover:bg-gray-100">Edit</span>
-                                    <span className="hover:bg-gray-100">Delete</span>
+                            <div className="relative">
+                                <HiDotsHorizontal onClick={()=>{setOpenMobile(true);setPerTransactionId(data.id)}} className="text-xl  text-gray-400 cursor-pointer"/>
+                                    {openMobile && (
+                                        <div 
+                                            className="fixed inset-0 z-30 cursor-default" 
+                                            onClick={() => {setOpenMobile(false);setPerTransactionId(data.id)}}
+                                        ></div>
+                                    )}
+                               <div className={`absolute right-0 z-40 bg-white shadow-lg flex flex-col ${openMobile && data.id === perTransactionId ? "block" : "hidden"}`}>
+                                    <span onClick={()=>{ setEditModalOpen(true);setTransactionId(data.id); setOpenMobile(false)}} className="cursor-pointer hover:bg-gray-100 p-2 px-20 flex items-center gap-1"><HiPencilAlt/>Edit</span>
+                                    <span onClick={()=>{handleDeleteId(data.id),setOpenMobile(false); setOpenMobile(false)}} className=" text-red-400 cursor-pointer hover:bg-gray-100 p-2 px-20 flex items-center  gap-1"><HiTrash/>Delete</span>
                                 </div>
                             </div>
                         </div>

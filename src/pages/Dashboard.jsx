@@ -1,6 +1,7 @@
 import { HiArrowSmUp, HiCalendar } from "react-icons/hi";
 import {Chart, CategoryScale,LinearScale, BarElement,Title, ArcElement,Tooltip,Legend, plugins} from "chart.js";
 import {Doughnut,Bar} from 'react-chartjs-2'
+import { useEffect,useState } from "react";
 Chart.register(
   CategoryScale,
   LinearScale,
@@ -12,7 +13,7 @@ Chart.register(
     
 function Dashboard() {
   
-
+const [transactionData,setTransactionData] = useState([])
 
 const CategoryPieData = {
   labels:[
@@ -121,6 +122,35 @@ const AnalysisOption = {
   },
 };
 
+useEffect(()=>{
+  const fetchData = ()=>{
+    try{
+        const savedData = localStorage.getItem("transaction_data")
+
+        if(savedData){
+
+           const parsedData = JSON.parse(savedData)
+
+          setTransactionData(parsedData)
+        }
+      
+
+       
+    }catch(error){
+      console.log("Error fetching data",error)
+      setTransactionData([])
+    }
+  }
+  fetchData()
+
+  window.addEventListener('storage',fetchData)
+  window.addEventListener('local-update',fetchData)
+
+  return ()=>{
+    window.removeEventListener('storage',fetchData)
+    window.removeEventListener('storage',fetchData)
+  }
+},[])
 
   return (
     <div className="space-y-10">
@@ -131,7 +161,7 @@ const AnalysisOption = {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         
         {/* Total Balance */}
-        <div className="bg-white shadow-md hover:shadow-xl transition-shadow p-6 rounded-xl border border-gray-100">
+        <div className="bg-white shadow-md hover:shadow-xl transition-shadow p-6 border border-gray-100">
           <h1 className="text-sm text-gray-500 font-medium uppercase tracking-wider">Total Balance</h1>
           <div className="mt-2 flex items-baseline gap-2">
             <span className="text-2xl font-bold text-gray-800">$1,150.00</span>
@@ -143,7 +173,7 @@ const AnalysisOption = {
         </div>
 
         {/* Monthly Income */}
-        <div className="bg-white shadow-md hover:shadow-xl transition-shadow p-6 rounded-xl border border-gray-100">
+        <div className="bg-white shadow-md hover:shadow-xl transition-shadow p-6 border border-gray-100">
           <h1 className="text-sm text-gray-500 font-medium uppercase tracking-wider">Monthly Income</h1>
           <div className="mt-2">
             <span className="text-2xl font-bold text-blue-300">$1,150.00</span>
@@ -155,7 +185,7 @@ const AnalysisOption = {
         </div>
 
         {/* Monthly Expenses */}
-        <div className="bg-white shadow-md hover:shadow-xl transition-shadow p-6 rounded-xl border border-gray-100">
+        <div className="bg-white shadow-md hover:shadow-xl transition-shadow p-6 border border-gray-100">
           <h1 className="text-sm text-gray-500 font-medium uppercase tracking-wider">Monthly Expenses</h1>
           <div className="mt-2">
             <span className="text-2xl font-bold text-red-400">$1,150.00</span>
@@ -167,7 +197,7 @@ const AnalysisOption = {
         </div>
 
         {/* Savings Rate */}
-        <div className="bg-white shadow-md hover:shadow-xl transition-shadow p-6 rounded-xl border border-gray-100">
+        <div className="bg-white shadow-md hover:shadow-xl transition-shadow p-6 border border-gray-100">
           <h1 className="text-sm text-gray-500 font-medium uppercase tracking-wider">Savings Rate</h1>
           <div className="mt-2">
             <span className="text-2xl font-bold text-gray-800">45%</span>
@@ -180,7 +210,7 @@ const AnalysisOption = {
 
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
-        <div className="bg-white shadow-md p-5 rounded-xl border border-gray-100">
+        <div className="bg-white shadow-md p-5 border border-gray-100">
           <span className="text-gray-700 font-bold text-xl block mb-4">Spending by Category</span>
           
           {/* Add a wrapper with a fixed height here */}
@@ -189,7 +219,7 @@ const AnalysisOption = {
           </div>
         </div>
 
-       <div className="bg-white shadow-md p-5 rounded-xl border border-gray-100">
+       <div className="bg-white shadow-md p-5 border border-gray-100">
           <span className="text-gray-700 font-bold text-xl block mb-4">Monthly Overview</span>
           
           {/* The missing wrapper: must have 'relative' and a height like 'h-[300px]' */}
@@ -199,9 +229,9 @@ const AnalysisOption = {
         </div>
       </div>
 
-       <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 bg-white rounded-xl overflow-hidden  shadow-md ">
+       <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 bg-white overflow-hidden  shadow-md ">
           <div className="max-h-[250px] overflow-y-auto scrollbar-hide">
-          <table class="table-fixed w-full text-center border-collapse ">
+          <table className="table-fixed w-full text-center border-collapse ">
             <thead className=" sticky top-0 text-center bg-gray-400 tracking-wider text-sm uppercase">
                 <tr className="text-gray-700">
                   <th className="p-3 text-white">Date</th>
@@ -212,70 +242,10 @@ const AnalysisOption = {
                 </tr>
             </thead>
             <tbody>
-                {[
-                  {
-                    "Date" : "04-20-2026",
-                    "Description": "Fund Transfer",
-                    "Category": "Fund Transfer",
-                    "Type": "Transfer",
-                    "Amount": "12000"
-                  },
-                  {
-                    "Date" : "04-20-2026",
-                    "Description": "Salary",
-                    "Category": "Income",
-                    "Type": "Income",
-                    "Amount": "12000"
-                  },
-                  {
-                    "Date" : "04-20-2026",
-                    "Description": "Payment for Goods",
-                    "Category": "Food",
-                    "Type": "Expense",
-                    "Amount": "12000"
-                  },
-                  {
-                    "Date" : "04-20-2026",
-                    "Description": "Payment for Goods",
-                    "Category": "Food",
-                    "Type": "Expense",
-                    "Amount": "12000"
-                  },
-                  {
-                    "Date" : "04-20-2026",
-                    "Description": "Payment for Goods",
-                    "Category": "Food",
-                    "Type": "Expense",
-                    "Amount": "12000"
-                  },{
-                    "Date" : "04-20-2026",
-                    "Description": "Payment for Goods",
-                    "Category": "Food",
-                    "Type": "Expense",
-                    "Amount": "12000"
-                  },
-                  {
-                    "Date" : "04-20-2026",
-                    "Description": "Payment for Goods",
-                    "Category": "Food",
-                    "Type": "Expense",
-                    "Amount": "12000"
-                  },
-                  {
-                    "Date" : "04-20-2026",
-                    "Description": "Payment for Goods",
-                    "Category": "Food",
-                    "Type": "Expense",
-                    "Amount": "12000"
-                  },
-                  {
-                    "Date" : "04-20-2026",
-                    "Description": "Payment for Goods",
-                    "Category": "Food",
-                    "Type": "Expense",
-                    "Amount": "12000"
-                  }
-                ].map((data,index)=>(
+                {
+                  transactionData.length > 0 ? 
+                  (
+                    transactionData.map((data,index)=>(
                     <tr className="p-2 hover:bg-gray-100">
                       <td className="p-2 tracking-wider text-sm">{data.Date}</td>
                       <td className="p-2 tracking-wider text-sm">{data.Description}</td>
@@ -288,7 +258,12 @@ const AnalysisOption = {
                       }>{data.Type === "Transfer" ? 
                       `₱${data.Amount}` : data.Type === "Income" ? `+₱${data.Amount}` : `-₱${data.Amount}`}</td>
                     </tr>
-                ))}
+                ))
+                  ) : 
+                  <tr className="w-full">
+                      <td className="p-8 italic text-gray-500" colSpan={5}>No Transactions Yet!</td>
+                  </tr>
+                }
             </tbody>
           </table>
           </div>
