@@ -1,9 +1,12 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { HiPlusCircle } from "react-icons/hi"
 import CreateBudgetModal from "../components/Budgets/CreateBudgetModal"
 function Budgets(){
     const [isOpen,setIsOpen] = useState(false)
 
+    useEffect(()=>{
+        
+    })
     return(
         <div className="space-y-4 sm:space-y-10">
             <div className="bg-white shadow-md  p-4">
