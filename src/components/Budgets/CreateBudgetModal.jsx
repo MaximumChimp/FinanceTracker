@@ -1,40 +1,14 @@
-import { HiHome, HiShoppingCart, HiShieldCheck, HiCreditCard, HiGift, HiTrendingUp } from "react-icons/hi";
-import { BiSolidZap, BiCar } from "react-icons/bi";
-import { IoGameController, IoTicket } from "react-icons/io5";
-import { FaUtensils, FaPlaneUp, FaPiggyBank, FaLaptop, FaMoneyBill1Wave } from "react-icons/fa6";
+import { Icons,Colors } from "../../config/iconConfig";
 import { useState } from "react";
 import { replace } from "react-router-dom";
 
 function CreateBudgetModal({ isOpen, onClose }) {
     if (!isOpen) return null;
 
-     const Icons = {
-        "HiHome": <HiHome />,
-        "HiShoppingCart": <HiShoppingCart />,
-        "HiShieldCheck": <HiShieldCheck />,
-        "HiCreditCard": <HiCreditCard />,
-        "HiGift": <HiGift />,
-        "HiTrendingUp": <HiTrendingUp />,
-        "BiSolidZap": <BiSolidZap />,
-        "BiCar": <BiCar />,
-        "IoGameController": <IoGameController />,
-        "IoTicket": <IoTicket />,
-        "FaUtensils": <FaUtensils />,
-        "FaPlaneUp": <FaPlaneUp />,
-        "FaPiggyBank": <FaPiggyBank />,
-        "FaLaptop": <FaLaptop />,
-        "FaMoneyBill1Wave": <FaMoneyBill1Wave />
-    };
-
-    const colors = [
-        'bg-red-400', 'bg-orange-400', 'bg-yellow-400', 'bg-green-400',
-        'bg-teal-400', 'bg-blue-400', 'bg-purple-400', 'bg-pink-400'
-    ];
-
     const [isChangeIcon, setIsChangeIcon] = useState(false);
-    const [selectedIcon, setSelectedIcon] = useState(<HiHome />);
+    const [selectedIcon, setSelectedIcon] = useState("HiHome");
     const [selectedColor, setSelectedColor] = useState('bg-blue-400');
-    const [amount, setAmount] = useState(0.00)
+    const [amount, setAmount] = useState("")
     const [description,setDescription] = useState("")
 
     const handleSaveCategory = ()=>{
@@ -69,6 +43,7 @@ function CreateBudgetModal({ isOpen, onClose }) {
        window.dispatchEvent(new Event("categories-update"))
         setAmount("")
         setDescription("")
+       onClose()
     }
     
        
@@ -98,7 +73,7 @@ function CreateBudgetModal({ isOpen, onClose }) {
                         
                         <span className="text-xs font-bold text-gray-400 uppercase mb-2">Select Color</span>
                         <div className="flex flex-wrap gap-3 mb-6">
-                            {colors.map((colorClass) => (
+                            {Colors.map((colorClass) => (
                                 <button 
                                     key={colorClass}
                                     onClick={() => setSelectedColor(colorClass)} 
@@ -136,13 +111,13 @@ function CreateBudgetModal({ isOpen, onClose }) {
                             />
                         </div>
                         <div className="flex flex-col border-b border-gray-200 focus-within:border-blue-400 transition-colors">
-                            <label className="text-xs font-bold text-gray-500 uppercase">Amount</label>
+                            <label className="text-xs font-bold text-gray-500 uppercase">Set your budget</label>
                             <input 
                                 type="number" 
                                 onChange={(e)=>setAmount(e.target.value)}
                                 placeholder="₱0.00" 
                                 value={amount}
-                                className="py-2 outline-none bg-transparent text-gray-700 font-semibold  [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                className="py-2 text-sm outline-none bg-transparent text-gray-700 font-semibold  [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             />
                         </div>
                     </div>

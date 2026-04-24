@@ -17,6 +17,7 @@ function Transactions(){
     const [transactionData,setTransactionData] = useState([])
     const [openMobile, setOpenMobile] = useState(false)
     const [perTransactionId,setPerTransactionId] = useState('')
+    const [categories,setCategories] = useState([])
     const filteredData = Array.isArray(transactionData) ?
     transactionData.filter(Boolean).filter((data,_)=>{
         const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' })
@@ -27,6 +28,8 @@ function Transactions(){
         const matchesMonth = filterMonths.toLowerCase() === 'all' ||  monthName === filterMonths
         return matchesType && matchesCategory && matchesMonth
     }) : []
+
+    
 
     const handleDeleteId = (id) => {
     try {
@@ -44,7 +47,7 @@ function Transactions(){
   
 
     useEffect(()=>{
-        const fetchData =()=>{
+        const fetchTransactions =()=>{
             const savedData = localStorage.getItem("transaction_data")
 
             if(savedData){
@@ -58,16 +61,42 @@ function Transactions(){
             }
         }
 
-        fetchData()
+        fetchTransactions()
 
-        window.addEventListener("storage",fetchData)
+        window.addEventListener("storage",fetchTransactions)
 
-        window.addEventListener("local-update",fetchData)
+        window.addEventListener("local-update",fetchTransactions)
 
         return ()=>{
-            window.removeEventListener("storage",fetchData)
-            window.removeEventListener("local-update",fetchData)
+            window.removeEventListener("storage",fetchTransactions)
+            window.removeEventListener("local-update",fetchTransactions)
         }
+    },[])
+
+    useEffect(()=>{
+        const fetchCategories = ()=>{
+            const savedCategories = localStorage.getItem("categories_data")
+
+            if(savedCategories){
+                try{
+                    let categories = JSON.parse(savedCategories)
+                    setCategories(categories)
+                }catch(error){
+                    console.log("Error Fetching Categories!",error)
+                    setCategories([])
+                }
+            }
+        }
+
+        fetchCategories()
+
+        window.addEventListener("storage",fetchCategories)
+        window.addEventListener("categories-update",fetchCategories)
+
+        return(()=>{
+            window.removeEventListener("storage",fetchCategories)
+            window.removeEventListener("categories-update",fetchCategories)
+        })
     },[])
 
     const handleToggleMobileMenu = (id) =>{
@@ -104,21 +133,23 @@ function Transactions(){
                     </div>
                     <div className="flex flex-col flex-1 space-y-2">
                         <span className="text-xs uppercase tracking-wider">Category</span>
-                        <select name="" id="" onChange={(e)=>setFilterCategory(e.target.value)} className="border border-gray-200 p-2 tracking-wider text-sm outline-0">
-                            <option value="All">All Categories</option>
-                            <option value="Income">Income</option>
-                            <option value="Food">Food</option>
-                            <option value="Housing">Housing</option>
-                            <option value="Transportation">Transportation</option>
-                            <option value="Entertainment">Entertainment</option>
-                            <option value="Shopping">Shopping</option>
+                        
+                        <select  name="" id="" onChange={(e)=>setFilterCategory(e.target.value)} className="border border-gray-200 p-2 tracking-wider text-sm outline-0">
+                            <option  value="All" selected>All Categories</option>
+                            {
+                                categories.map((category,index)=>(
+                                    <option key={index} value={category.description}>{category.description}</option>
+                                ))
+                            }    
                         </select>
                     </div>
                 </div>
                 <div className="flex flex-col space-y-2">
                     <span className="text-xs uppercase tracking-wider">Month</span>
                      <select name="" id="" onChange={(e)=>setFilterMonths(e.target.value)} className="border border-gray-200 p-2 tracking-wider text-sm outline-0">
+                          
                         {DisplayMonths.map((data,index)=>(
+                          
                             <option key={index} value={data}>{data}</option>
                         ))}
                     </select>

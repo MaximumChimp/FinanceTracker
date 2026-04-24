@@ -9,7 +9,7 @@ function EditTransactionModal({isOpen,onClose,id}){
     const [description,setDescription] = useState('');
     const [category,setCategory] = useState('');
     const [type,setType] = useState('')
-
+    const [categories,setCategories] = useState([])
   
     useEffect(()=>{
         if(transactionData){
@@ -70,6 +70,27 @@ function EditTransactionModal({isOpen,onClose,id}){
         
     }
 
+    useEffect(()=>{
+
+        const fetchCategories = ()=>{
+
+            const savedCategories = localStorage.getItem("categories_data")
+            
+            if(savedCategories){
+                try{
+                    const categories = JSON.parse(savedCategories)
+                    setCategories(categories)
+                }catch(error){
+                    console.log("Error on fetching categories!", error)
+                    setCategories([])
+                }
+            }
+        }
+
+        fetchCategories()
+
+
+    },[])
     return(
               <div className="fixed flex items-center justify-center z-50 bg-black/50 inset-0">
             <div className="relative p-4 rounded-xl bg-white w-[90%] max-w-[550px] space-y-2">
@@ -94,13 +115,11 @@ function EditTransactionModal({isOpen,onClose,id}){
                         <div className="flex flex-col space-y-1 flex-1">
                             <label htmlFor="" className="text-sm">Category</label>
                             <select name="" id="" value={category} onChange={(e)=> setCategory(e.target.value)} className="border-b-1 border-b-gray-300 outline-0 focus:border-b-blue-400 text-sm ">
-                                <option value="Food">Food</option>
-                                <option value="Income">Income</option>
-                                <option value="Transportation">Trasportation</option>
-                                <option value="Housing">Housing</option>
-                                <option value="Shopping">Shopping</option>
-                                <option value="Entertainment">Entertainment</option>
-                                <option value="Transfer">Transfer</option>
+                                {
+                                    categories.map((category,index)=>(
+                                        <option key={index} value={category.description}>{category.description}</option>
+                                    ))
+                                }
                             </select>
                         </div>
                         <div className="flex flex-col space-y-1 flex-1">
