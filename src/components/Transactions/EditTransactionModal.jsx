@@ -42,6 +42,28 @@ function EditTransactionModal({isOpen,onClose,id}){
         }
          console.log(transactionData)
     },[id])
+
+    useEffect(()=>{
+
+        const fetchCategories = ()=>{
+
+            const savedCategories = localStorage.getItem("categories_data")
+            
+            if(savedCategories){
+                try{
+                    const categories = JSON.parse(savedCategories)
+                    setCategories(categories)
+                }catch(error){
+                    console.log("Error on fetching categories!", error)
+                    setCategories([])
+                }
+            }
+        }
+
+        fetchCategories()
+
+
+    },[])
    
     const handleSave = (id)=>{
 
@@ -66,31 +88,12 @@ function EditTransactionModal({isOpen,onClose,id}){
         localStorage.setItem("transaction_data",JSON.stringify(updateData))
         
         window.dispatchEvent(new Event('local-update'))
+
         onClose()
         
     }
 
-    useEffect(()=>{
-
-        const fetchCategories = ()=>{
-
-            const savedCategories = localStorage.getItem("categories_data")
-            
-            if(savedCategories){
-                try{
-                    const categories = JSON.parse(savedCategories)
-                    setCategories(categories)
-                }catch(error){
-                    console.log("Error on fetching categories!", error)
-                    setCategories([])
-                }
-            }
-        }
-
-        fetchCategories()
-
-
-    },[])
+    
     return(
               <div className="fixed flex items-center justify-center z-50 bg-black/50 inset-0">
             <div className="relative p-4 rounded-xl bg-white w-[90%] max-w-[550px] space-y-2">

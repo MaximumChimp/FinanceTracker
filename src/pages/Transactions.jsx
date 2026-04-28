@@ -23,13 +23,16 @@ function Transactions(){
         const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' })
         .format(new Date(data.Date));
         const matchesType = filterType === 'All' || data.Type === filterType
-        const matchesCategory = filterCategory === 'All' || data.Category === filterCategory
+
+        const categoryObj = categories.find(cat => cat.id === data.Category)
+        const categoryName = categoryObj ? categoryObj.description : 'All'
+        const matchesCategory = filterCategory === 'All' || categoryName === filterCategory
         
         const matchesMonth = filterMonths.toLowerCase() === 'all' ||  monthName === filterMonths
         return matchesType && matchesCategory && matchesMonth
     }) : []
 
-    
+   
 
     const handleDeleteId = (id) => {
     try {
@@ -111,7 +114,7 @@ function Transactions(){
         console.log(toggle)
     }
 
-
+    console.log(filteredData)
     return(
         <div className="space-y-4 sm:space-y-10">
             <div className="sticky top-0 bg-white w-full p-4 shadow-md  z-50">
@@ -172,23 +175,28 @@ function Transactions(){
                     <tbody className="text-center">
                        {
                         filteredData.length > 0 ?(
-                            filteredData.map((data,_)=>(
-                            <tr key={data.id} className="hover:bg-gray-100 transition-all duration-300 ease-in-out opacity-100">
-                                <td className="p-2 tracking-wider uppercase text-sm" >{data.Date}</td>
-                                <td className="p-2 tracking-wider text-sm">{data.Description}</td>
-                                <td className="p-2 tracking-wider text-sm">{data.Category}</td>
-                                <td className="p-2 tracking-wider text-sm">{data.Type}</td>
-                                <td className={data.Type === "Transfer" ? "p-2 tracking-wider uppercase text-sm text-gray-400":
-                                    data.Type === "Income" ? "p-2 tracking-wider uppercase text-sm text-blue-400" : "p-2 tracking-wider uppercase text-sm text-red-400"
-                                }>{data.Type === "Transfer" ? `₱${data.Amount}` : 
-                                    data.Type === "Income" ? `+₱${data.Amount}` : `-₱${data.Amount}`
-                                }</td>
-                                <td className="p-2 tracking-wider uppercase text-sm space-x-2">
-                                    <button onClick={()=>{ setEditModalOpen(true),setTransactionId(data.id);handleToggleMobileMenu(data.id) }}><HiPencilAlt className="text-blue-500 text-lg"/></button>
-                                    <button onClick={()=>{handleDeleteId(data.id)}}><HiTrash className="text-red-500 text-lg"/></button>
-                                </td>
-                            </tr>
-                        ))
+                            filteredData.map((data,_)=>{
+                                const categoryObj = categories.find(cat=> cat.id === data.Category)
+                                const categoryName = categoryObj ? categoryObj.description : "General"
+                                console.log(categoryObj,categoryName)
+                                return(
+                                    <tr key={data.id} className="hover:bg-gray-100 transition-all duration-300 ease-in-out opacity-100">
+                                        <td className="p-2 tracking-wider uppercase text-sm" >{data.Date}</td>
+                                        <td className="p-2 tracking-wider text-sm">{data.Description}</td>
+                                        <td className="p-2 tracking-wider text-sm">{categoryName}</td>
+                                        <td className="p-2 tracking-wider text-sm">{data.Type}</td>
+                                        <td className={data.Type === "Transfer" ? "p-2 tracking-wider uppercase text-sm text-gray-400":
+                                            data.Type === "Income" ? "p-2 tracking-wider uppercase text-sm text-blue-400" : "p-2 tracking-wider uppercase text-sm text-red-400"
+                                        }>{data.Type === "Transfer" ? `₱${data.Amount}` : 
+                                            data.Type === "Income" ? `+₱${data.Amount}` : `-₱${data.Amount}`
+                                        }</td>
+                                        <td className="p-2 tracking-wider uppercase text-sm space-x-2">
+                                            <button onClick={()=>{ setEditModalOpen(true),setTransactionId(data.id);handleToggleMobileMenu(data.id) }}><HiPencilAlt className="text-blue-500 text-lg"/></button>
+                                            <button onClick={()=>{handleDeleteId(data.id)}}><HiTrash className="text-red-500 text-lg"/></button>
+                                        </td>
+                                    </tr>
+                                )
+                            })
                         ): 
                         <tr className="w-full">
                            <td className="p-8 text-center text-gray-500 italic" colSpan={6}>No Trasactions Yet!</td>

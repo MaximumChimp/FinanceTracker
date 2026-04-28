@@ -8,6 +8,7 @@ function CreateTransactionModal({isOpen,onClose}){
    const [type,setType] = useState("Income")
    const [date,setDate] = useState(new Date().toISOString().split('T')[0])
    const [categories,setCategories] = useState([])
+   const [budget,setBudgets] = useState([])
    const handleSave = ()=> {
         if(!amount || !description) return alert("Please fill all required field!")
         const uuid = crypto.randomUUID().split('-')[0]
@@ -83,12 +84,20 @@ function CreateTransactionModal({isOpen,onClose}){
                     <div className="flex justify-between gap-5">
                         <div className="flex flex-col space-y-1 flex-1">
                             <label htmlFor="" className="text-sm">Category</label>
-                            <select name="" id="" onChange={(e)=>setCategory(e.target.value)}  className="border-b-1 border-b-gray-300 outline-0 focus:border-b-blue-400 text-sm ">
-                                {
-                                    categories.map((category,index)=>(
-                                        <option key={index} value={category.description}>{category.description}</option>
-                                    ))
-                                }
+                            <select 
+                                name="category" 
+                                id="category-select" 
+                                onChange={(e) => setCategory(e.target.value)} 
+                                className="border-b-1 border-b-gray-300 outline-0 focus:border-b-blue-400 text-sm"
+                            >
+                               
+                                <option value="">Select a Category</option>
+                                
+                                {categories.map((category) => (
+                                    <option key={category.id} value={category.id}>
+                                        {category.description}
+                                    </option>
+                                ))}
                             </select>
                         </div>
                         <div className="flex flex-col space-y-1 flex-1">
