@@ -207,7 +207,7 @@ useEffect(()=>{
 const MonthlyIncome = transactionData.filter(transaction => transaction.Type === "Income").reduce((sum,transaction) => sum + Number(transaction.Amount),0)
 const MonthlyExpense = transactionData.filter(transaction => transaction.Type === "Expense").reduce((sum,transaction)=> sum + Number(transaction.Amount),0)
 const totalBalance = MonthlyIncome - MonthlyExpense
-const savingsRate = MonthlyIncome > 0 ? ((MonthlyIncome - MonthlyExpense) / totalBalance) * 100: 0
+const savingsRate = MonthlyIncome > 0 ? ((MonthlyIncome - MonthlyExpense) / MonthlyIncome) * 100: 0
   return (
     <div className="space-y-10">
       {/* grid-cols-1: Mobile (1 card per row)
@@ -272,18 +272,33 @@ const savingsRate = MonthlyIncome > 0 ? ((MonthlyIncome - MonthlyExpense) / tota
           <span className="text-gray-700 font-bold text-xl block mb-4">Spending by Category</span>
           
           {/* Add a wrapper with a fixed height here */}
-          <div className="relative h-[300px] w-full"> 
-            <Doughnut data={CategoryPieData} options={options}/>
-          </div>
+          {/* {
+            expenseTransactions.length > 0  ? (
+              
+            ) : 
+            <div className="relative h-[300px] w-full flex items-center justify-center italic text-gray-500" >No Transactions Yet!</div>
+          } */}
+           {
+            expenseTransactions.length > 0? (
+              <div className="relative h-[300px] w-full"> 
+                <Doughnut data={CategoryPieData} options={options}/>
+            </div>
+            ) : 
+            <div className="relative h-[300px] flex items-center justify-center text-gray-500 italic">No Recorded Expenses!</div>
+           }
         </div>
 
-       <div className="bg-white shadow-md p-5 border border-gray-100">
-          <span className="text-gray-700 font-bold text-xl block mb-4">Monthly Overview</span>
+        <div className="bg-white shadow-md p-5 border border-gray-100">
+            <span className="text-gray-700 font-bold text-xl block mb-4">Monthly Overview</span>
           
-          {/* The missing wrapper: must have 'relative' and a height like 'h-[300px]' */}
-          <div className="relative h-[300px] w-full">
-            <Bar data={BudgetAnalysisBarData} options={AnalysisOption}/>
-          </div>
+          {
+            transactionData.length > 0 ?(
+                <div className="relative h-[300px] w-full">
+                  <Bar data={BudgetAnalysisBarData} options={AnalysisOption}/>
+                </div>
+            ): 
+            <div className="relative h-[300px] w-full flex items-center justify-center italic text-gray-500">No transactions Yet!</div>
+          }
         </div>
       </div>
 

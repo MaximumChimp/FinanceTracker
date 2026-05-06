@@ -13,7 +13,7 @@ function Budgets(){
     const [isEditingOpen,setIsEditingOpen] = useState(false)
     const [categoryId, setCategoryId] = useState(null)
 
-
+    console.log(transactions)
    useEffect(() => {
         const fetchData = () => {
             const savedData = localStorage.getItem("categories_data");
@@ -92,11 +92,16 @@ function Budgets(){
                 {
                     categoryList.map((category,index)=>{
                         if(!category) return null;
+                        
+                        const uniqueTransactionsCategory = [...new Set(transactions.map(t=> t.Category))]
+                      
                         // --- NEW CALCULATION BLOCK ---
-                        const totalSpent = transactions
-                            .filter(t => t.Category === category.id)
-                            .reduce((sum, t) => sum + Number(t.Amount), 0);
+                        const totalSpent = uniqueTransactionsCategory.map(catName =>{
+                            const amount = transactions.filter(t=> t.Category === catName && t.Type === "Expense").reduce((sum,t)=> sum + Number(t.Amount),0)
 
+                            return amount
+                        })
+                        
                         const remaining = category.budget - totalSpent;
                         const spentPercentage = Math.min((totalSpent / category.budget) * 100, 100);
                         // -----------------------------

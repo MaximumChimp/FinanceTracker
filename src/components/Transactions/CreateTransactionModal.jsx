@@ -45,7 +45,7 @@ function CreateTransactionModal({isOpen,onClose}){
    useEffect(()=>{
         const fetchCategories = ()=>{
             const savedCategories = localStorage.getItem("categories_data")
-
+            console.log(savedCategories)
             if(savedCategories){
                try{
                     let categories = JSON.parse(savedCategories)
@@ -61,6 +61,8 @@ function CreateTransactionModal({isOpen,onClose}){
 
 
    },[])
+
+   
 
    return(
         <div className="fixed flex items-center justify-center z-50 bg-black/50 inset-0">
@@ -92,9 +94,9 @@ function CreateTransactionModal({isOpen,onClose}){
                             >
                                
                                 <option value="">Select a Category</option>
-                                
+                                <option value="Salary">Salary</option>
                                 {categories.map((category) => (
-                                    <option key={category.id} value={category.id}>
+                                    <option key={category.id} value={category.description}>
                                         {category.description}
                                     </option>
                                 ))}

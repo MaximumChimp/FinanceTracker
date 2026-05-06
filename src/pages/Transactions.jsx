@@ -1,7 +1,8 @@
 import { HiPlusCircle,HiPencilAlt,HiTrash,HiDotsHorizontal  } from "react-icons/hi";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import CreateTransactionModal from "../components/Transactions/CreateTransactionModal";
 import EditTransactionModal from "../components/Transactions/EditTransactionModal";
+import CreateCategoryModal from "../components/Transactions/CreateCategoryModal";
 const DisplayMonths = ["All","January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"];
 
@@ -18,22 +19,27 @@ function Transactions(){
     const [openMobile, setOpenMobile] = useState(false)
     const [perTransactionId,setPerTransactionId] = useState('')
     const [categories,setCategories] = useState([])
+    const [isOpenCategory,setIsOpenCategory] = useState(false)
+    const uniqueCategories = [...new Set(transactionData.map(t => t.Category))]
+
     const filteredData = Array.isArray(transactionData) ?
-    transactionData.filter(Boolean).filter((data,_)=>{
-        const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' })
-        .format(new Date(data.Date));
-        const matchesType = filterType === 'All' || data.Type === filterType
+        transactionData.filter(Boolean).filter((data,_)=>{
+            const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' })
+            .format(new Date(data.Date));
+            const matchesType = filterType === 'All' || data.Type === filterType
 
-        const categoryObj = categories.find(cat => cat.id === data.Category)
-        const categoryName = categoryObj ? categoryObj.description : 'All'
-        const matchesCategory = filterCategory === 'All' || categoryName === filterCategory
+            const category = uniqueCategories.find(cat => cat === data.Category)
         
-        const matchesMonth = filterMonths.toLowerCase() === 'all' ||  monthName === filterMonths
-        return matchesType && matchesCategory && matchesMonth
-    }) : []
+            const categoryName = category ? category : 'All'
+            const matchesCategory = filterCategory === 'All' || categoryName === filterCategory
+            
+            const matchesMonth = filterMonths.toLowerCase() === 'all' ||  monthName === filterMonths
+            return matchesType && matchesCategory && matchesMonth
+        }) : []
 
-   
-
+    const allCategories = [...new Set(filteredData.map(cat => cat.Category))]
+    
+    console.log(allCategories)
     const handleDeleteId = (id) => {
     try {
         const updatedData = transactionData.filter(item => item?.id !== id);
@@ -111,16 +117,19 @@ function Transactions(){
 
         const toggle = parsedData.find((item)=> item.id === id)
 
-        console.log(toggle)
     }
 
-    console.log(filteredData)
+    
+
     return(
         <div className="space-y-4 sm:space-y-10">
             <div className="sticky top-0 bg-white w-full p-4 shadow-md  z-50">
                 <div className="flex flex-col justify-between sm:items-center sm:flex-row md:flex-row space-y-5">
                 <h1 className="text-2xl font-bold text-blue-500 mt-10 sm:mt-10 md:mt-0">Transactions</h1>
-                <button onClick={()=>setIsOpen(true)} className="bg-blue-400 p-2 font-medium sm:text-sm md:text-sm lg:text-sm text-white  tracking-wider flex items-center justify-center gap-1"><HiPlusCircle /> Create Transaction</button>
+                <div className="flex gap-2">
+                     <button onClick={()=>setIsOpen(true)} className="bg-blue-400 p-2 font-medium sm:text-sm md:text-sm lg:text-sm text-white  tracking-wider flex items-center justify-center gap-1"><HiPlusCircle /> Create Transaction</button>
+                    <button onClick={()=>setIsOpenCategory(true)} className="bg-blue-400 p-2 font-medium sm:text-sm md:text-sm lg:text-sm text-white  tracking-wider flex items-center justify-center gap-1"><HiPlusCircle /> Create Category</button>
+                </div>
                 </div>
 
             <div className="flex flex-col sm:flex-row md:flex-row justify-center text-xs pt-5 pb-4 sm:justify-start md:justify-start sm:text-sm gap-4">
@@ -139,9 +148,9 @@ function Transactions(){
                         
                         <select  name="" id="" onChange={(e)=>setFilterCategory(e.target.value)} className="border border-gray-200 p-2 tracking-wider text-sm outline-0">
                             <option  value="All" selected>All Categories</option>
-                            {
-                                categories.map((category,index)=>(
-                                    <option key={index} value={category.description}>{category.description}</option>
+                            {   
+                                uniqueCategories.map((category,index)=>(
+                                    <option key={index} value={category}>{category}</option>
                                 ))
                             }    
                         </select>
@@ -176,14 +185,11 @@ function Transactions(){
                        {
                         filteredData.length > 0 ?(
                             filteredData.map((data,_)=>{
-                                const categoryObj = categories.find(cat=> cat.id === data.Category)
-                                const categoryName = categoryObj ? categoryObj.description : "General"
-                                console.log(categoryObj,categoryName)
                                 return(
                                     <tr key={data.id} className="hover:bg-gray-100 transition-all duration-300 ease-in-out opacity-100">
                                         <td className="p-2 tracking-wider uppercase text-sm" >{data.Date}</td>
                                         <td className="p-2 tracking-wider text-sm">{data.Description}</td>
-                                        <td className="p-2 tracking-wider text-sm">{categoryName}</td>
+                                        <td className="p-2 tracking-wider text-sm">{data.Category}</td>
                                         <td className="p-2 tracking-wider text-sm">{data.Type}</td>
                                         <td className={data.Type === "Transfer" ? "p-2 tracking-wider uppercase text-sm text-gray-400":
                                             data.Type === "Income" ? "p-2 tracking-wider uppercase text-sm text-blue-400" : "p-2 tracking-wider uppercase text-sm text-red-400"
@@ -247,6 +253,7 @@ function Transactions(){
             <div className="">
                 <CreateTransactionModal isOpen={isOpen} onClose={()=> setIsOpen(false)}/>
                 <EditTransactionModal isOpen= {editModalOpen} onClose={()=> setEditModalOpen(false)} id={transactionId}/>
+                <CreateCategoryModal isOpen={isOpenCategory} onClose={()=> setIsOpenCategory(false)}/>
             </div>
         </div>
     )

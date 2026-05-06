@@ -111,7 +111,7 @@ function CreateBudgetModal({ isOpen, onClose }) {
                             />
                         </div>
                         <div className="flex flex-col border-b border-gray-200 focus-within:border-blue-400 transition-colors">
-                            <label className="text-xs font-bold text-gray-500 uppercase">Set your budget</label>
+                            <label className="text-xs font-bold text-gray-500 uppercase">Set budget</label>
                             <input 
                                 type="number" 
                                 onChange={(e)=>setAmount(e.target.value)}
